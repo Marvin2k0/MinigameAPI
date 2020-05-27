@@ -14,15 +14,21 @@ public interface Game
 
     /**
      *
-     * @param player The player to join the game
+     * @param player The player to join the game.
      */
     void join(Player player);
 
     /**
      *
-     * @param player The player to leave the game
+     * @param player The player to leave the game.
      */
     void leave(Player player);
+
+    /**
+     *
+     * @return Returns game's name.
+     */
+    String getName();
 
     /**
      *
@@ -38,7 +44,7 @@ public interface Game
 
     /**
      *
-     * Resets the game, removes entities and resets block changes.
+     * Resets the game, removes added entities and undoes block changes.
      */
     void reset();
 }
