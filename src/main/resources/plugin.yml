@@ -1,6 +1,6 @@
 name: MinigameAPI
 version: ${project.version}
-main: de.marvinleiers.minigameapi.MinigameAPI
+main: de.marvinleiers.minigameapi.MinigameMain
 api-version: 1.13
 prefix: Game
 authors: [Marvin2k0, Marvin Leiers]
