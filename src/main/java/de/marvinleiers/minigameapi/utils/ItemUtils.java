@@ -8,7 +8,12 @@ public class ItemUtils
 {
     public static ItemStack create(Material type, String name)
     {
-        ItemStack item = new ItemStack(type);
+        return create(type, (byte) 0, name);
+    }
+
+    public static ItemStack create(Material type, byte id, String name)
+    {
+        ItemStack item = new ItemStack(type, 1, id);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         item.setItemMeta(meta);

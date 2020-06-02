@@ -7,9 +7,7 @@ import de.marvinleiers.minigameapi.events.PlayerGameLeaveEvent;
 import de.marvinleiers.minigameapi.utils.CountdownTimer;
 import de.marvinleiers.minigameapi.utils.Text;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
@@ -27,6 +25,8 @@ public class Playable implements Game
     private final Set<Player> players;
     private final String name;
     private boolean hasStarted;
+    private boolean countdownStarted;
+    private int taskId;
 
     public Playable(String name)
     {
@@ -45,39 +45,51 @@ public class Playable implements Game
 
         GamePlayer gp = new GamePlayer(this, player);
         players.add(player);
+        gameplayers.add(gp);
 
         player.getInventory().setContents(getLobbyItems());
         player.updateInventory();
 
         Bukkit.getPluginManager().callEvent(new PlayerGameJoinEvent(player, this));
 
-        if (getPlayers().size() >= MIN_PLAYERS && !hasStarted())
+        if (getPlayers().size() >= MIN_PLAYERS && !countdownStarted)
             start();
     }
 
     public void leave(Player player)
     {
-        players.remove(player);
+        leave(player, true);
+    }
+
+    public void leave(Player player, boolean check)
+    {
         GamePlayer gp = MinigameAPI.gameplayers.get(player);
         gp.leave();
 
         MinigameAPI.gameplayers.remove(player);
         Bukkit.getPluginManager().callEvent(new PlayerGameLeaveEvent(player, this));
+
+        if (gameplayers.size() <= 1 && check)
+        {
+            players.remove(player);
+            stop();
+        }
     }
 
     public void start()
     {
-        new CountdownTimer(MinigameAPI.plugin, 30,
-                () -> {},
+        CountdownTimer timer = new CountdownTimer(MinigameAPI.plugin, 30,
+                () -> this.countdownStarted = true,
                 this::startGame,
-                (t) -> printSeconds(t.getSecondsLeft())).scheduleTimer();
+                (t) -> printSeconds(t.getSecondsLeft()));
 
-        hasStarted = true;
+        timer.scheduleTimer();
+        taskId = timer.getAssignedTaskId();
     }
 
     private void startGame()
     {
-        //TODO: abort event , abort reason
+        hasStarted = true;
         Bukkit.getPluginManager().callEvent(new GameStartEvent(this));
     }
 
@@ -97,13 +109,26 @@ public class Playable implements Game
     public void stop()
     {
         this.hasStarted = false;
+        this.countdownStarted = false;
 
         reset();
     }
 
+    @Override
     public void reset()
     {
+        reset(true);
+    }
 
+    public void reset(boolean check)
+    {
+        for (Player player : players)
+            leave(player, check);
+
+        this.players.clear();
+        this.gameplayers.clear();
+
+        Bukkit.getScheduler().cancelTask(taskId);
     }
 
     public void sendMessage(String msg)

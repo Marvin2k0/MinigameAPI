@@ -1,5 +1,6 @@
 package de.marvinleiers.minigameapi.events;
 
+import de.marvinleiers.minigameapi.MinigameAPI;
 import de.marvinleiers.minigameapi.game.Game;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

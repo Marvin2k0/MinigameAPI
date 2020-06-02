@@ -71,6 +71,14 @@ public interface Game
 
     /**
      *
+     * Resets the game, removes added entities and undoes block changes
+     *
+     * @param check True when the game should detect auto reset
+     */
+    void reset(boolean check);
+
+    /**
+     *
      * Returns the items a player receives once joined.
      *
      * @return The items

@@ -1,5 +1,6 @@
 package de.marvinleiers.minigameapi;
 
+import de.marvinleiers.minigameapi.events.GameEventHandler;
 import de.marvinleiers.minigameapi.game.Game;
 import de.marvinleiers.minigameapi.game.GamePlayer;
 import de.marvinleiers.minigameapi.game.Playable;
@@ -10,9 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public final class MinigameAPI
 {
@@ -31,6 +30,7 @@ public final class MinigameAPI
         this.config = plugin.getConfig();
 
         plugin.getServer().getPluginManager().registerEvents(new SignListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new GameEventHandler(), plugin);
 
         loadGames();
     }
@@ -55,7 +55,7 @@ public final class MinigameAPI
         Playable.lobbyItems = items.getContents();
     }
 
-    public boolean inGame(Player player)
+    public static boolean inGame(Player player)
     {
         return gameplayers.containsKey(player);
     }
@@ -66,6 +66,11 @@ public final class MinigameAPI
             api = new MinigameAPI(plugin);
 
         return api;
+    }
+
+    public static Collection<Game> getGames()
+    {
+        return games.values();
     }
 
     public static Game getGameFromName(String name)

@@ -13,6 +13,7 @@ public class GamePlayer
     private final Location location;
     private final ItemStack[] inventoryContents;
     private final GameMode gameMode;
+    private String team;
 
     public GamePlayer(Game game, Player player)
     {
@@ -24,8 +25,20 @@ public class GamePlayer
 
         player.getInventory().clear();
         player.setGameMode(GameMode.SURVIVAL);
+        player.setHealth(player.getHealthScale());
+        player.setFoodLevel(20);
 
         MinigameAPI.gameplayers.put(player, this);
+    }
+
+    public void setTeam(String team)
+    {
+        this.team = team;
+    }
+
+    public String getTeam()
+    {
+        return this.team;
     }
 
     public void leave()
@@ -33,6 +46,7 @@ public class GamePlayer
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.getInventory().setContents(inventoryContents);
+        player.updateInventory();
         player.teleport(location);
         player.setGameMode(gameMode);
     }

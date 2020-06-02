@@ -1,6 +1,8 @@
 package de.marvinleiers.minigameapi.events;
 
+import de.marvinleiers.minigameapi.MinigameAPI;
 import de.marvinleiers.minigameapi.game.Game;
+import de.marvinleiers.minigameapi.game.GamePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
@@ -16,6 +18,11 @@ public class PlayerGameEvent extends PlayerEvent
         super(who);
 
         this.game = game;
+    }
+
+    public GamePlayer getGamePlayer()
+    {
+        return MinigameAPI.gameplayers.get(player);
     }
 
     public Game getGame()
