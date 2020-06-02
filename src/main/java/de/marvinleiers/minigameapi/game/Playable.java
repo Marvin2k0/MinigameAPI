@@ -64,10 +64,12 @@ public class Playable implements Game
     public void leave(Player player, boolean check)
     {
         GamePlayer gp = MinigameAPI.gameplayers.get(player);
-        gp.leave();
 
-        MinigameAPI.gameplayers.remove(player);
         Bukkit.getPluginManager().callEvent(new PlayerGameLeaveEvent(player, this));
+
+        gp.leave();
+        gameplayers.remove(gp);
+        MinigameAPI.gameplayers.remove(player);
 
         if (gameplayers.size() <= 1 && check)
         {
@@ -90,12 +92,28 @@ public class Playable implements Game
     private void startGame()
     {
         hasStarted = true;
+
+        for (Player player : players)
+        {
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
+            player.updateInventory();
+
+            player.getInventory().setContents(getGameItems());
+            player.updateInventory();
+        }
+
         Bukkit.getPluginManager().callEvent(new GameStartEvent(this));
     }
 
     public ItemStack[] getLobbyItems()
     {
         return lobbyItems.clone();
+    }
+
+    public ItemStack[] getGameItems()
+    {
+        return gameItems.clone();
     }
 
     private void printSeconds(int seconds)

@@ -55,6 +55,11 @@ public final class MinigameAPI
         Playable.lobbyItems = items.getContents();
     }
 
+    public void setGameItems(Inventory items)
+    {
+        Playable.gameItems = items.getContents();
+    }
+
     public static boolean inGame(Player player)
     {
         return gameplayers.containsKey(player);

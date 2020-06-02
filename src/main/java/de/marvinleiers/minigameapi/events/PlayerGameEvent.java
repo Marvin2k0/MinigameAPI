@@ -12,17 +12,19 @@ public class PlayerGameEvent extends PlayerEvent
     private static final HandlerList handlers = new HandlerList();
 
     protected final Game game;
+    private final GamePlayer gp;
 
     public PlayerGameEvent(Player who, Game game)
     {
         super(who);
 
         this.game = game;
+        this.gp = MinigameAPI.gameplayers.get(player);
     }
 
     public GamePlayer getGamePlayer()
     {
-        return MinigameAPI.gameplayers.get(player);
+        return gp;
     }
 
     public Game getGame()

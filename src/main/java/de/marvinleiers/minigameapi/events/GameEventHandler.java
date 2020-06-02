@@ -1,6 +1,7 @@
 package de.marvinleiers.minigameapi.events;
 
 import de.marvinleiers.minigameapi.MinigameAPI;
+import de.marvinleiers.minigameapi.MinigameMain;
 import de.marvinleiers.minigameapi.game.Game;
 import de.marvinleiers.minigameapi.game.GamePlayer;
 import org.bukkit.Bukkit;
@@ -82,8 +83,9 @@ public class GameEventHandler implements Listener
         if (!MinigameAPI.inGame(player))
             return;
 
-        Game game = MinigameAPI.gameplayers.get(player).getGame();
+        GamePlayer gp = MinigameAPI.gameplayers.get(player);
+        Game game = gp.getGame();
 
-        Bukkit.getPluginManager().callEvent(new PlayerGameLeaveEvent(player, game));
+        game.leave(player);
     }
 }

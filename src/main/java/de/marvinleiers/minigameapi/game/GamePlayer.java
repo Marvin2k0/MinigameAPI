@@ -49,6 +49,8 @@ public class GamePlayer
         player.updateInventory();
         player.teleport(location);
         player.setGameMode(gameMode);
+
+        setTeam(null);
     }
 
     public void sendMessage(String msg)
